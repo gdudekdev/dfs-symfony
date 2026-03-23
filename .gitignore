@@ -1,18 +1,18 @@
 # IDE
 .idea/
 
-# Symfony (src/)
-src/vendor/
-src/var/
-src/.env.local
-src/.env.local.php
-src/.env.*.local
-src/config/secrets/prod/prod.decrypt.private.php
-src/public/bundles/
-src/public/assets/
-src/assets/vendor/
-src/.phpunit.cache/
-src/phpunit.xml
+# Symfony (app/)
+app/vendor/
+app/var/
+app/.env.local
+app/.env.local.php
+app/.env.*.local
+app/config/secrets/prod/prod.decrypt.private.php
+app/public/bundles/
+app/public/assets/
+app/assets/vendor/
+app/.phpunit.cache/
+app/phpunit.xml
 
 # Composer
 composer.phar
