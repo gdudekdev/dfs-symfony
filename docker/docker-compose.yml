@@ -5,11 +5,20 @@ services:
     image: php:8.4-fpm
     container_name: php_symfony
     volumes:
-      - ../src:/var/www/symfony
-    working_dir: /var/www/symfony
-    # Extensions nécessaires pour Symfony + Doctrine MySQL
+      - ../src:/app
+    working_dir: /app
+    environment:
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    # Extensions PHP + Composer + Symfony CLI
     command: >
-      sh -c "docker-php-ext-install pdo pdo_mysql && php-fpm"
+      sh -c "
+        apt-get update && apt-get install -y git unzip libzip-dev &&
+        docker-php-ext-install pdo pdo_mysql zip &&
+        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&
+        curl -sS https://get.symfony.com/cli/installer | bash &&
+        mv /root/.symfony5/bin/symfony /usr/local/bin/symfony &&
+        php-fpm
+      "
 
   # ─── Nginx pour Symfony ────────────────────────────────────────
   nginx:
@@ -18,7 +27,7 @@ services:
     ports:
       - "8001:80"          # Symfony accessible sur http://localhost:8001
     volumes:
-      - ../src:/var/www/symfony          # Code source
+      - ../src:/app          # Code source
       - ../nginx/symfony.conf:/etc/nginx/conf.d/default.conf  # Config Nginx
     depends_on:
       - php_symfony
@@ -49,4 +58,3 @@ services:
 
 volumes:
   db_data:
-
