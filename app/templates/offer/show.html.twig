@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ offer.title }} - JobBoard{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-8">
+        <h1>{{ offer.title }}</h1>
+        <h4 class="text-muted">{{ offer.company }}</h4>
+
+        <div class="mb-3">
+            <span class="badge bg-primary">{{ offer.contractType }}</span>
+            {% if offer.location %}
+                <span class="badge bg-secondary">{{ offer.location }}</span>
+            {% endif %}
+            {% if offer.salary %}
+                <span class="badge bg-success">{{ offer.salary }}</span>
+            {% endif %}
+            <small class="text-muted ms-2">Publiée le {{ offer.createdAt|date('d/m/Y') }}</small>
+        </div>
+
+        <hr>
+
+        <div class="mb-4">
+            {{ offer.description|nl2br }}
+        </div>
+
+        <a href="{{ path('app_offer_index') }}" class="btn btn-outline-secondary">Retour aux offres</a>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Postuler</h5>
+                {% if app.user %}
+                    <a href="{{ path('app_apply', {id: offer.id}) }}" class="btn btn-success w-100">Postuler à cette offre</a>
+                {% else %}
+                    <p class="text-muted">Connectez-vous pour postuler.</p>
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-primary w-100">Se connecter</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

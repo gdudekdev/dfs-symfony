@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes candidatures{% endblock %}
+
+{% block body %}
+<h1>Mes candidatures</h1>
+
+{% if applications is empty %}
+    <p class="text-muted">Vous n'avez pas encore postulé à une offre.</p>
+    <a href="{{ path('app_offer_index') }}" class="btn btn-primary">Voir les offres</a>
+{% else %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Offre</th>
+                <th>Entreprise</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+                <tr>
+                    <td>
+                        <a href="{{ path('app_offer_show', {id: application.offer.id}) }}">
+                            {{ application.offer.title }}
+                        </a>
+                    </td>
+                    <td>{{ application.offer.company }}</td>
+                    <td>
+                        {% if application.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        {% elseif application.status == 'accepted' %}
+                            <span class="badge bg-success">Acceptée</span>
+                        {% elseif application.status == 'rejected' %}
+                            <span class="badge bg-danger">Refusée</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ application.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ application.appliedAt|date('d/m/Y') }}</td>
+                    <td>
+                        <a href="{{ path('app_offer_show', {id: application.offer.id}) }}" class="btn btn-outline-primary btn-sm">Voir l'offre</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

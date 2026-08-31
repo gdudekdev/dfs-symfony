@@ -1,20 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil - JobBoard{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="row">
+    <div class="col-lg-8">
+        <h1>Bienvenue sur JobBoard</h1>
+        <p class="lead">Trouvez votre prochain emploi ou publiez vos offres.</p>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <h2 class="mt-4">Dernières offres</h2>
+        {% if offers is empty %}
+            <p class="text-muted">Aucune offre disponible pour le moment.</p>
+        {% else %}
+            {% for offer in offers %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ offer.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ offer.company }} — {{ offer.contractType }}</h6>
+                        {% if offer.location %}
+                            <p class="card-text"><small class="text-muted">{{ offer.location }}</small></p>
+                        {% endif %}
+                        <p class="card-text">{{ offer.description|u.truncate(150) }}...</p>
+                        <a href="{{ path('app_offer_show', {id: offer.id}) }}" class="btn btn-outline-primary btn-sm">Voir l'offre</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/app/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/app/templates/home/index.html.twig</code></li>
-    </ul>
+        <a href="{{ path('app_offer_index') }}" class="btn btn-primary mt-2">Voir toutes les offres</a>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                {% if app.user %}
+                    <h5>Bonjour {{ app.user.email }}</h5>
+                    <a href="{{ path('app_my_applications') }}" class="btn btn-outline-secondary btn-sm mt-2">Mes candidatures</a>
+                {% else %}
+                    <h5>Vous cherchez un emploi ?</h5>
+                    <p>Inscrivez-vous pour postuler aux offres.</p>
+                    <a href="{{ path('app_register') }}" class="btn btn-success btn-sm">S'inscrire</a>
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-primary btn-sm">Se connecter</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

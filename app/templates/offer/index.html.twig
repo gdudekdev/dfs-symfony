@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Offres d'emploi{% endblock %}
+
+{% block body %}
+<h1>Offres d'emploi</h1>
+
+{% if offers is empty %}
+    <p class="text-muted">Aucune offre disponible pour le moment.</p>
+{% else %}
+    <div class="row">
+        {% for offer in offers %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ offer.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ offer.company }}</h6>
+                        <p class="card-text">
+                            <span class="badge bg-primary">{{ offer.contractType }}</span>
+                            {% if offer.location %}
+                                <span class="badge bg-secondary">{{ offer.location }}</span>
+                            {% endif %}
+                            {% if offer.salary %}
+                                <span class="badge bg-success">{{ offer.salary }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="card-text">{{ offer.description|u.truncate(200) }}...</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{{ path('app_offer_show', {id: offer.id}) }}" class="btn btn-outline-primary btn-sm">Voir l'offre</a>
+                        <small class="text-muted float-end">{{ offer.createdAt|date('d/m/Y') }}</small>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
